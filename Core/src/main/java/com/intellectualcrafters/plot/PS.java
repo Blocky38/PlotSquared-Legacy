@@ -1551,17 +1551,31 @@ public class PS{
             }
         }
         Settings.load(configFile);
-        try (InputStream stream = getClass().getResourceAsStream("/plugin.properties")) {
+        /*try (InputStream stream = getClass().getResourceAsStream("/plugin.properties")) {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
                 String versionString = br.readLine();
                 String commitString = br.readLine();
                 String dateString = br.readLine();
                 this.version = PlotVersion.tryParse(versionString, commitString, dateString);
                 System.out.println("PlotSquared version is " + this.version);
+                System.out.println(versionString);
+                System.out.println(commitString);
+                System.out.println(dateString);
             }
         } catch (Throwable ignore) {
             ignore.printStackTrace();
+        }*/
+        try {
+            InputStream stream = getClass().getResourceAsStream("/plugin.properties");
+            java.util.Scanner scanner = new java.util.Scanner(stream).useDelimiter("\\A");
+            String versionString = scanner.next().trim();
+            scanner.close();
+            this.version = PlotVersion.tryParse(versionString);
+            System.out.println("Version is " + this.version);
+        } catch (Throwable ignore) {
+            ignore.printStackTrace();
         }
+
         Settings.save(configFile);
         config = YamlConfiguration.loadConfiguration(configFile);
     }
